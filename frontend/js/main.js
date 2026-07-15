@@ -14,11 +14,19 @@ button.addEventListener("click", async () => {
         })
     });
 
-    const result = await response.json();
+    if (!response.ok) {
+        alert("取得に失敗しました");
+        return;
+    }
 
-    console.log(result);
+    const blob = await response.blob();
 
-    document.getElementById("result").textContent =
-        JSON.stringify(result, null, 2);
+    const downloadUrl = window.URL.createObjectURL(blob);
 
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = "race.html";
+    a.click();
+
+    window.URL.revokeObjectURL(downloadUrl);
 });
