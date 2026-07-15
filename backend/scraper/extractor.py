@@ -49,21 +49,25 @@ def extract_race_history(row) -> list[RaceHistory]:
     
     # タイム・コーナー通過順・上がり3Fの行を取得
     # 次のtrを探す必要がある
-    next_row = row.find_next_sibling('tr')
-    if not next_row:
+    time_corner_3f_row = row.find_next_siblings('tr')[2]
+    if not time_corner_3f_row:
         return history
     
-    time_cells = next_row.select('td')
+    time_corner_3f_cells = time_corner_3f_row.select('td')
+    
+    # 3〜7個目のtdに過去5走分のデータが入っている
+    # インデックス2〜6を使用
+    race_data_cells = time_corner_3f_cells[2:6]
     
     for i, race_info in enumerate(race_infos):
-        if i >= len(time_cells):
+        if i >= len(race_data_cells):
             break
             
         # raceInfoから距離を抽出
         distance = extract_distance_from_race_info(race_info)
         
         # タイム・コーナー・上がりを抽出
-        time, last3f, corners = extract_time_info(time_cells[i])
+        time, last3f, corners = extract_time_info(race_data_cells[i])
         
         first_corner, final_corner = extract_corners(corners)
         
