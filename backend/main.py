@@ -22,4 +22,4 @@ app.include_router(predict_router)
 
 @app.get("/")
 def root():
-    return FileResponse("../frontend/index.html")}
+    return FileResponse("../frontend/index.html")
