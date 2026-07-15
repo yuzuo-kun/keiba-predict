@@ -1,7 +1,5 @@
 from pydantic import BaseModel
-
-from models.horse import Horse
-
+from models.info import Info
 
 class PredictResponse(BaseModel):
-    horses: list[Horse]
+    info: Info
