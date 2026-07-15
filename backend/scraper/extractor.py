@@ -57,7 +57,7 @@ def extract_race_history(row) -> list[RaceHistory]:
     
     # 3〜7個目のtdに過去5走分のデータが入っている
     # インデックス2〜6を使用
-    race_data_cells = time_corner_3f_cells[2:6]
+    race_data_cells = time_corner_3f_cells[2:7]
     
     for i, race_info in enumerate(race_infos):
         if i >= len(race_data_cells):
