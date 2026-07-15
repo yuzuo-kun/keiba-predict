@@ -20,4 +20,4 @@ def predict(request: PredictRequest):
         content=html,
         media_type="text/html; charset=utf-8",
         headers=headers
-    )}
+    )
