@@ -22,6 +22,4 @@ app.include_router(predict_router)
 
 @app.get("/")
 def root():
-    return {
-        "message": "Keiba Predict API is running!"
-    }
+    return FileResponse("../frontend/index.html")}
