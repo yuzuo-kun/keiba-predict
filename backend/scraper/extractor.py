@@ -106,7 +106,7 @@ def extract_race_history(row) -> list[RaceHistory]:
             race_place=race_place,
             direction=direction,
             distance=distance,
-            race_horse_no=race_horse_no
+            race_horse_no=race_horse_no,
             time=time,
             last3f=last3f,
             first_corner=first_corner,
