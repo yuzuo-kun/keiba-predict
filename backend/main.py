@@ -1,39 +1,18 @@
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="Keiba Predict API")
+
+# CSS・JavaScript配信用
+app.mount("/static", StaticFiles(directory="../frontend"), name="static")
 
 
 @app.get("/")
 def root():
-    return {
-        "message": "Keiba Predict API is running!"
-    }
+    return FileResponse("../frontend/index.html")
 
 
 @app.get("/hello")
 def hello():
-    return {
-        "message": "Hello FastAPI!"
-    }
-
-
-@app.get("/predict")
-def predict():
-    return {
-        "status": "success",
-        "race": "Kasamatsu 5R",
-        "prediction": [
-            {
-                "horse_no": 5,
-                "score": 95
-            },
-            {
-                "horse_no": 6,
-                "score": 90
-            },
-            {
-                "horse_no": 7,
-                "score": 88
-            }
-        ]
-    }
+    return {"message": "Hello FastAPI!"}
