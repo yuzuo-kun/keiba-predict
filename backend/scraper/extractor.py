@@ -93,9 +93,9 @@ def extract_race_history(row) -> list[RaceHistory]:
     for i, race_info in enumerate(race_infos):
         if i >= len(race_data_cells):
             break
-            
-        # raceInfoから距離を抽出
-        distance = extract_distance_from_race_info(race_info)
+        
+        # 場所、方向、距離、馬番を抽出
+        race_place, direction, distance, race_horse_no = extract_race_info(race_info)
         
         # タイム・コーナー・上がりを抽出
         time, last3f, corners = extract_time_info(race_data_cells[i])
@@ -103,7 +103,10 @@ def extract_race_history(row) -> list[RaceHistory]:
         first_corner, final_corner = extract_corners(corners)
         
         race_history = RaceHistory(
+            race_place=race_place,
+            direction=direction,
             distance=distance,
+            race_horse_no=race_horse_no
             time=time,
             last3f=last3f,
             first_corner=first_corner,
@@ -114,17 +117,24 @@ def extract_race_history(row) -> list[RaceHistory]:
     return history
 
 
-def extract_distance_from_race_info(race_info) -> int:
-    """raceInfoから距離を抽出する"""
-    text = race_info.get_text()
-    # 例: "船橋　左1200　2番" から 1200 を抽出
-    match = re.search(r'左(\d+)|右(\d+)|直(\d+)', text)
+import re
+
+def extract_race_info(race_info):
+    """raceInfoから場所・方向・距離・馬番を抽出する"""
+
+    text = race_info.get_text(" ", strip=True)
+
+    match = re.search(r'(\S+)\s*(左|右|直)(\d+)\s*(\d+)番', text)
+
     if match:
-        # どれかマッチしたグループを返す
-        for group in match.groups():
-            if group:
-                return int(group)
-    return 0
+        return (
+            match.group(1),          # place
+            match.group(2),          # direction
+            int(match.group(3)),     # distance
+            int(match.group(4))      # horse_no
+        )
+
+    return "", "", 0, 0
 
 
 def extract_time_info(time_cell) -> tuple[str, float | None, str]:
