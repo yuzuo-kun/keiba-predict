@@ -1,18 +1,13 @@
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
+from api.predict import router as predict_router
 
 app = FastAPI(title="Keiba Predict API")
 
-# CSS・JavaScript配信用
-app.mount("/static", StaticFiles(directory="../frontend"), name="static")
+app.include_router(predict_router)
 
 
 @app.get("/")
 def root():
-    return FileResponse("../frontend/index.html")
-
-
-@app.get("/hello")
-def hello():
-    return {"message": "Hello FastAPI!"}
+    return {
+        "message": "Keiba Predict API is running!"
+    }
