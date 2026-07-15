@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 
 class RaceHistory(BaseModel):
+    direction str | None
     distance: int              # 距離(m)
     time: str                  # タイム
     last3f: float | None       # 上がり
