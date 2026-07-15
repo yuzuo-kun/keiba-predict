@@ -1,0 +1,143 @@
+import re
+
+from bs4 import BeautifulSoup
+
+from models.horse import Horse
+from models.race_history import RaceHistory
+
+
+def extract_horses(soup: BeautifulSoup) -> list[Horse]:
+    """BeautifulSoupオブジェクトから馬のリストを抽出する"""
+    horses = []
+    
+    # 出馬表の馬情報を抽出
+    horse_rows = soup.select('tr.tBorder')
+    
+    for row in horse_rows:
+        horse_no = extract_horse_no(row)
+        if horse_no == 0:
+            continue
+            
+        history = extract_race_history(row)
+        
+        horse = Horse(
+            horse_no=horse_no,
+            history=history
+        )
+        horses.append(horse)
+    
+    return horses
+
+
+def extract_horse_no(row) -> int:
+    """馬番を抽出する"""
+    horse_no_elem = row.select_one('td.horseNum')
+    if horse_no_elem:
+        try:
+            return int(horse_no_elem.text.strip())
+        except ValueError:
+            return 0
+    return 0
+
+
+def extract_race_history(row) -> list[RaceHistory]:
+    """過去成績を抽出する"""
+    history = []
+    
+    # 過去5走のraceInfoを抽出
+    race_infos = row.select('div.raceInfo')
+    
+    # タイム・コーナー通過順・上がり3Fの行を取得
+    # 次のtrを探す必要がある
+    next_row = row.find_next_sibling('tr')
+    if not next_row:
+        return history
+    
+    time_cells = next_row.select('td')
+    
+    for i, race_info in enumerate(race_infos):
+        if i >= len(time_cells):
+            break
+            
+        # raceInfoから距離を抽出
+        distance = extract_distance_from_race_info(race_info)
+        
+        # タイム・コーナー・上がりを抽出
+        time, last3f, corners = extract_time_info(time_cells[i])
+        
+        first_corner, final_corner = extract_corners(corners)
+        
+        race_history = RaceHistory(
+            distance=distance,
+            time=time,
+            last3f=last3f,
+            first_corner=first_corner,
+            final_corner=final_corner
+        )
+        history.append(race_history)
+    
+    return history
+
+
+def extract_distance_from_race_info(race_info) -> int:
+    """raceInfoから距離を抽出する"""
+    text = race_info.get_text()
+    # 例: "船橋　左1200　2番" から 1200 を抽出
+    match = re.search(r'左(\d+)|右(\d+)|直(\d+)', text)
+    if match:
+        # どれかマッチしたグループを返す
+        for group in match.groups():
+            if group:
+                return int(group)
+    return 0
+
+
+def extract_time_info(time_cell) -> tuple[str, float | None, str]:
+    """タイムセルからタイム、上がり、コーナー通過順を抽出する"""
+    text = time_cell.get_text().strip()
+    
+    # 例: "1:18.0　7-7-5　39.0" のような形式
+    parts = text.split()
+    
+    time = ""
+    last3f = None
+    corners = ""
+    
+    if len(parts) >= 1:
+        time = parts[0]
+    
+    if len(parts) >= 2:
+        corners = parts[1]
+    
+    if len(parts) >= 3:
+        try:
+            last3f = float(parts[2])
+        except ValueError:
+            pass
+    
+    return time, last3f, corners
+
+
+def extract_corners(corners_str: str) -> tuple[int | None, int | None]:
+    """コーナー通過順から初回と最終を抽出する"""
+    if not corners_str:
+        return None, None
+    
+    parts = corners_str.split('-')
+    
+    first_corner = None
+    final_corner = None
+    
+    if len(parts) >= 1:
+        try:
+            first_corner = int(parts[0].strip())
+        except ValueError:
+            pass
+    
+    if len(parts) >= 2:
+        try:
+            final_corner = int(parts[-1].strip())
+        except ValueError:
+            pass
+    
+    return first_corner, final_corner

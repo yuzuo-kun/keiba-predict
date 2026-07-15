@@ -108,7 +108,9 @@ keiba-predict/
     │
     ├── models/
     │   ├── request.py          # リクエストモデル
-    │   └── response.py         # レスポンスモデル（今後追加）
+    │   └── response.py         # レスポンスモデル
+    │   └── horse.py            # 馬モデル
+    │   └── race_history.py     # 過去成績モデル
     │
     ├── scraper/
     │   ├── fetcher.py          # HTML取得(requests)
