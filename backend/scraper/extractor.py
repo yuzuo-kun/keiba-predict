@@ -7,18 +7,35 @@ from models.info import Info
 from models.race_history import RaceHistory
 
 def extract_info(soup: BeautifulSoup) -> Info:
-    """BeautifulSoupオブジェクトからレース情報の辞書を抽出する"""
-    info = Info()
-    
+    """BeautifulSoupオブジェクトからレース情報を抽出する"""
     # レース情報のテーブルを抽出
     race_info_table = soup.select_one('article.raceCard')
-    if race_info_table:
-        info.place = race_info_table.select_one('a.cNaviBtn.courseBtn.active').text.strip()
-        info.race_no = race_info_table.select_one('a.cNaviBtn.raceNum.active').text.strip()
-        info.race_name = race_info_table.select_one('section.raceTitle h3').text.strip()
-        info.horses = extract_horses(soup)
     
-    return info
+    place = ""
+    race_no = ""
+    race_name = ""
+    
+    if race_info_table:
+        place_elem = race_info_table.select_one('a.cNaviBtn.courseBtn.active')
+        if place_elem:
+            place = place_elem.text.strip()
+        
+        race_no_elem = race_info_table.select_one('a.cNaviBtn.raceNum.active')
+        if race_no_elem:
+            race_no = race_no_elem.text.strip()
+        
+        race_name_elem = race_info_table.select_one('section.raceTitle h3')
+        if race_name_elem:
+            race_name = race_name_elem.text.strip()
+    
+    horses = extract_horses(soup)
+    
+    return Info(
+        place=place,
+        race_no=race_no,
+        race_name=race_name,
+        horses=horses
+    )
 
 def extract_horses(soup: BeautifulSoup) -> list[Horse]:
     """BeautifulSoupオブジェクトから馬のリストを抽出する"""
