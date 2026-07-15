@@ -2,10 +2,10 @@ from pydantic import BaseModel
 
 
 class RaceHistory(BaseModel):
-    race_place str | None     # 場所
-    direction str | None      # 方向
+    race_place: str | None     # 場所
+    direction: str | None      # 方向
     distance: int | None      # 距離(m)
-    race_horse_no | None      # 馬番
+    race_horse_no: | None      # 馬番
     time: str | None          # タイム
     last3f: float | None      # 上がり
     first_corner: int | None # 初回コーナー位置
