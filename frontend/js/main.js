@@ -4,7 +4,7 @@ button.addEventListener("click", async () => {
 
     const url = document.getElementById("raceUrl").value;
 
-    const response = await fetch("https://あなたのRenderのURL.onrender.com/predict", {
+    const response = await fetch("https://keiba-predict-x1bh.onrender.com/predict", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
