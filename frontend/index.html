@@ -1,33 +1,34 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>地方競馬予想</title>
 
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
+
 <body>
 
 <div class="container">
 
     <h1>地方競馬予想</h1>
 
-    <div class="card">
-        <label>出馬表URL</label>
+    <input
+        id="raceUrl"
+        type="text"
+        placeholder="出馬表URL">
 
-        <input
-            type="text"
-            id="raceUrl"
-            placeholder="https://www.keiba.go.jp/..."
-        >
+    <button id="predictBtn">
+        予想開始
+    </button>
 
-        <button id="predictBtn">
-            予想開始
-        </button>
-    </div>
+    <pre id="result"></pre>
 
 </div>
 
+<script src="/static/js/main.js"></script>
+
 </body>
+
 </html>
