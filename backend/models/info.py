@@ -7,4 +7,5 @@ class Info(BaseModel):
     place: str  # 場所
     race_no: str  # レース番号
     race_name: str  # レース名
+    race_distance: int # 距離
     horses: list[Horse]  # 馬一覧
