@@ -38,7 +38,7 @@ def extract_info(soup: BeautifulSoup) -> Info:
         place=place,
         race_no=race_no,
         race_name=race_name,
-        race_distance=race_distance
+        race_distance=race_distance,
         horses=horses
     )
 
