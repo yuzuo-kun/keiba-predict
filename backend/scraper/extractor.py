@@ -27,6 +27,10 @@ def extract_info(soup: BeautifulSoup) -> Info:
         race_name_elem = race_info_table.select_one('section.raceTitle h3')
         if race_name_elem:
             race_name = race_name_elem.text.strip()
+        
+        race_distance_elem = race_info_table.select_one('section.raceTitle ul.dataArea li')
+        if race_distance_elem:
+            race_distance = int(re.search(r'(\d+)ｍ', race_distance_elem.get_text(strip=True)).group(1))
     
     horses = extract_horses(soup)
     
@@ -34,6 +38,7 @@ def extract_info(soup: BeautifulSoup) -> Info:
         place=place,
         race_no=race_no,
         race_name=race_name,
+        race_distance=race_distance
         horses=horses
     )
 
