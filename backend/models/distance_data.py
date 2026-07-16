@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from models.race_history import history
+from models.race_history import race_history
 
 
 class distance_data(BaseModel):
