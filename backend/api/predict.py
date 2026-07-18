@@ -17,9 +17,10 @@ def predict(request: PredictRequest):
     soup = parse_html(html)
     info = extract_info(soup)
 
-    distance = calculate(info)
+    distance, ranking = calculate(info)
 
     return PredictResponse(
         info=info,
-        distance=distance
+        distance=distance,
+        ranking=ranking
     )

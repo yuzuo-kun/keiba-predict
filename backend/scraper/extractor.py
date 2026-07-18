@@ -130,11 +130,11 @@ def extract_race_info(race_info):
 
     text = race_info.get_text(" ", strip=True)
 
-    match = re.search(r'(\S+)\s*(左|右|直)(\d+)\s*(\d+)番', text)
+    match = re.search(r'(.+?)\s*(?:芝|ダート)?\s*(左|右|直)(\d+)\s*(\d+)番', text)
 
     if match:
         return (
-            match.group(1),          # place
+            match.group(1).strip(),  # place
             match.group(2),          # direction
             int(match.group(3)),     # distance
             int(match.group(4))      # horse_no
