@@ -16,7 +16,7 @@ def analyze_distance(info) -> list[distance_horse]:
         result.append(
             analyze_horse(
                 horse,
-                info.race_place,
+                info.place,
                 same_course_distances,
                 all_course_distances
             )
@@ -34,7 +34,7 @@ def get_same_course_distances(info) -> list[int]:
 
     for horse in info.horses:
         for history in horse.history:
-            if history.race_place == info.race_place:
+            if history.race_place == info.place:
                 distances.add(history.distance)
 
     return sorted(distances)
