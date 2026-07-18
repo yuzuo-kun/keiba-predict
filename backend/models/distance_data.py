@@ -5,11 +5,11 @@ from pydantic import BaseModel
 from models.race_history import RaceHistory
 
 
-class distance_data(BaseModel):
+class DistanceData(BaseModel):
     race_place: str
     distance: int
 
-    histories: list[history]
+    histories: list[RaceHistory]
 
     avg_time: Optional[str] = None
     avg_last3f: Optional[float] = None

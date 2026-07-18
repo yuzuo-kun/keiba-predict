@@ -1,5 +1,4 @@
 import re
-from typing import List, Tuple
 
 from bs4 import BeautifulSoup
 
@@ -15,6 +14,7 @@ def extract_info(soup: BeautifulSoup) -> Info:
     place = ""
     race_no = ""
     race_name = ""
+    race_distance = 0
     
     if race_info_table:
         place_elem = race_info_table.select_one('a.cNaviBtn.courseBtn.active')
@@ -31,7 +31,9 @@ def extract_info(soup: BeautifulSoup) -> Info:
         
         race_distance_elem = race_info_table.select_one('section.raceTitle ul.dataArea li')
         if race_distance_elem:
-            race_distance = int(re.search(r'(\d+)ｍ', race_distance_elem.get_text(strip=True)).group(1))
+            match = re.search(r'(\d+)ｍ', race_distance_elem.get_text(strip=True))
+            if match:
+                race_distance = int(match.group(1))
     
     horses = extract_horses(soup)
     
@@ -43,7 +45,7 @@ def extract_info(soup: BeautifulSoup) -> Info:
         horses=horses
     )
 
-def extract_horses(soup: BeautifulSoup) -> List[Horse]:
+def extract_horses(soup: BeautifulSoup) -> list[Horse]:
     """BeautifulSoupオブジェクトから馬のリストを抽出する"""
     horses = []
     
@@ -77,7 +79,7 @@ def extract_horse_no(row) -> int:
     return 0
 
 
-def extract_race_history(row) -> List[RaceHistory]:
+def extract_race_history(row) -> list[RaceHistory]:
     """過去成績を抽出する"""
     history = []
     
@@ -123,8 +125,6 @@ def extract_race_history(row) -> List[RaceHistory]:
     return history
 
 
-import re
-
 def extract_race_info(race_info):
     """raceInfoから場所・方向・距離・馬番を抽出する"""
 
@@ -143,7 +143,7 @@ def extract_race_info(race_info):
     return "", "", 0, 0
 
 
-def extract_time_info(time_cell) -> Tuple[str, float | None, str]:
+def extract_time_info(time_cell) -> tuple[str, float | None, str]:
     """タイムセルからタイム、上がり、コーナー通過順を抽出する"""
     text = time_cell.get_text().strip()
     
@@ -169,7 +169,7 @@ def extract_time_info(time_cell) -> Tuple[str, float | None, str]:
     return time, last3f, corners
 
 
-def extract_corners(corners_str: str) -> Tuple[int | None, int | None]:
+def extract_corners(corners_str: str) -> tuple[int | None, int | None]:
     """コーナー通過順から初回と最終を抽出する"""
     if not corners_str:
         return None, None

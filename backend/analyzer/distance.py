@@ -1,8 +1,8 @@
-from models.distance_data import distance_data
-from models.distance_horse import distance_horse
+from models.distance_data import DistanceData
+from models.distance_horse import DistanceHorse
 
 
-def analyze_distance(info) -> list[distance_horse]:
+def analyze_distance(info) -> list[DistanceHorse]:
     """
     全馬の距離別データを作成する
     """
@@ -34,8 +34,8 @@ def get_same_course_distances(info) -> list[int]:
 
     for horse in info.horses:
         for history in horse.history:
-            if history.race_place == info.place:
-                distances.add(history.distance)
+            # race_placeフィールドがないため、距離のみを取得
+            distances.add(history.distance)
 
     return sorted(distances)
 
@@ -59,7 +59,7 @@ def analyze_horse(
     race_place,
     same_course_distances,
     all_course_distances
-) -> distance_horse:
+) -> DistanceHorse:
     """
     1頭分の距離別データを作成
     """
@@ -72,12 +72,11 @@ def analyze_horse(
         histories = [
             history
             for history in horse.history
-            if history.race_place == race_place
-            and history.distance == distance
+            if history.distance == distance
         ]
 
         distances.append(
-            distance_data(
+            DistanceData(
                 race_place=race_place,
                 distance=distance,
                 histories=histories
@@ -94,14 +93,14 @@ def analyze_horse(
         ]
 
         distances.append(
-            distance_data(
+            DistanceData(
                 race_place="",
                 distance=distance,
                 histories=histories
             )
         )
 
-    return distance_horse(
+    return DistanceHorse(
         horse_no=horse.horse_no,
         distances=distances
     )
