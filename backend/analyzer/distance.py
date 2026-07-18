@@ -71,7 +71,7 @@ def analyze_horse(
 
         histories = [
             history
-            for history in horse.histories
+            for history in horse.history
             if history.race_place == race_place
             and history.distance == distance
         ]
@@ -89,7 +89,7 @@ def analyze_horse(
 
         histories = [
             history
-            for history in horse.histories
+            for history in horse.history
             if history.distance == distance
         ]
 
