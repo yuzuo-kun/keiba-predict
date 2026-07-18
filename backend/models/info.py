@@ -1,3 +1,5 @@
+from typing import List
+
 from pydantic import BaseModel
 
 from models.horse import Horse
@@ -8,4 +10,4 @@ class Info(BaseModel):
     race_no: str  # レース番号
     race_name: str  # レース名
     race_distance: int # 距離
-    horses: list[Horse]  # 馬一覧
+    horses: List[Horse]  # 馬一覧

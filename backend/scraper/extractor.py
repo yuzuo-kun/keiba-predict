@@ -1,4 +1,5 @@
 import re
+from typing import List, Tuple
 
 from bs4 import BeautifulSoup
 
@@ -42,7 +43,7 @@ def extract_info(soup: BeautifulSoup) -> Info:
         horses=horses
     )
 
-def extract_horses(soup: BeautifulSoup) -> list[Horse]:
+def extract_horses(soup: BeautifulSoup) -> List[Horse]:
     """BeautifulSoupオブジェクトから馬のリストを抽出する"""
     horses = []
     
@@ -76,7 +77,7 @@ def extract_horse_no(row) -> int:
     return 0
 
 
-def extract_race_history(row) -> list[RaceHistory]:
+def extract_race_history(row) -> List[RaceHistory]:
     """過去成績を抽出する"""
     history = []
     
@@ -142,7 +143,7 @@ def extract_race_info(race_info):
     return "", "", 0, 0
 
 
-def extract_time_info(time_cell) -> tuple[str, float | None, str]:
+def extract_time_info(time_cell) -> Tuple[str, float | None, str]:
     """タイムセルからタイム、上がり、コーナー通過順を抽出する"""
     text = time_cell.get_text().strip()
     
@@ -168,7 +169,7 @@ def extract_time_info(time_cell) -> tuple[str, float | None, str]:
     return time, last3f, corners
 
 
-def extract_corners(corners_str: str) -> tuple[int | None, int | None]:
+def extract_corners(corners_str: str) -> Tuple[int | None, int | None]:
     """コーナー通過順から初回と最終を抽出する"""
     if not corners_str:
         return None, None
