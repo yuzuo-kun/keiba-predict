@@ -33,7 +33,7 @@ def get_same_course_distances(info) -> list[int]:
     distances = set()
 
     for horse in info.horses:
-        for history in horse.histories:
+        for history in horse.history:
             if history.race_place == info.race_place:
                 distances.add(history.distance)
 
@@ -48,7 +48,7 @@ def get_all_course_distances(info) -> list[int]:
     distances = set()
 
     for horse in info.horses:
-        for history in horse.histories:
+        for history in horse.history:
             distances.add(history.distance)
 
     return sorted(distances)
