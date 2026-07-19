@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>地方競馬予想</title>
 
     <link rel="stylesheet" href="/static/css/style.css">
@@ -12,18 +13,36 @@
 
 <div class="container">
 
-    <h1>地方競馬予想</h1>
+    <!-- 検索画面 -->
+    <div id="searchDiv">
+        <h1>地方競馬予想</h1>
 
-    <input
-        id="raceUrl"
-        type="text"
-        placeholder="出馬表URL">
+        <input
+            id="raceUrl"
+            type="text"
+            placeholder="出馬表URL">
 
-    <button id="predictBtn">
-        予想開始
-    </button>
+        <button id="predictBtn">
+            予想開始
+        </button>
+    </div>
 
-    <pre id="result"></pre>
+    <!-- 結果画面 -->
+    <div id="resultDiv" style="display: none;">
+        <h1>予想結果</h1>
+
+        <div id="raceInfo"></div>
+
+        <div id="settings">
+            <h2>集計設定</h2>
+            <div id="evaluationSettings"></div>
+        </div>
+
+        <div id="horseResults"></div>
+
+        <button id="backBtn">戻る</button>
+        <button id="recalcBtn">再計算</button>
+    </div>
 
 </div>
 
