@@ -30,6 +30,11 @@
 
     <!-- 結果画面 -->
     <div id="resultDiv" style="display: none;">
+        <div id="fixedButtons">
+            <button id="backBtn">戻る</button>
+            <button id="recalcBtn">再計算</button>
+        </div>
+
         <h1>予想結果</h1>
 
         <div id="raceInfo"></div>
@@ -41,13 +46,14 @@
 
         <div id="settings">
             <h2>集計設定</h2>
+            <div id="settingsButtons">
+                <button id="selectAllBtn" class="settings-btn">全選択</button>
+                <button id="deselectAllBtn" class="settings-btn">全解除</button>
+            </div>
             <div id="evaluationSettings"></div>
         </div>
 
         <div id="horseResults"></div>
-
-        <button id="backBtn">戻る</button>
-        <button id="recalcBtn">再計算</button>
     </div>
 
 </div>

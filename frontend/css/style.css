@@ -15,6 +15,7 @@ body{
     margin:auto;
     padding:15px;
     min-height:100vh;
+    padding-top:70px;
 }
 
 h1{
@@ -123,6 +124,24 @@ button:active{
     transform:scale(0.98);
 }
 
+#fixedButtons{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    background:white;
+    padding:10px 15px;
+    box-shadow:0 2px 4px rgba(0,0,0,.1);
+    z-index:1000;
+    display:flex;
+    gap:10px;
+}
+
+#fixedButtons button{
+    margin-bottom:0;
+    flex:1;
+}
+
 #backBtn{
     background:#757575;
 }
@@ -137,6 +156,22 @@ button:active{
 
 #recalcBtn:hover{
     background:#43a047;
+}
+
+#settingsButtons{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.settings-btn{
+    background:#607d8b;
+    font-size:14px;
+    padding:10px;
+}
+
+.settings-btn:hover{
+    background:#546e7a;
 }
 
 #raceInfo{

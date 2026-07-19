@@ -48,6 +48,20 @@ document.getElementById("recalcBtn").addEventListener("click", () => {
     }
 });
 
+document.getElementById("selectAllBtn").addEventListener("click", () => {
+    evaluationItems.forEach(item => {
+        item.checked = true;
+    });
+    displayEvaluationSettings();
+});
+
+document.getElementById("deselectAllBtn").addEventListener("click", () => {
+    evaluationItems.forEach(item => {
+        item.checked = false;
+    });
+    displayEvaluationSettings();
+});
+
 function displayResults() {
     const info = currentData.info;
     const distance = currentData.distance;
