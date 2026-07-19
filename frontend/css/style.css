@@ -161,6 +161,64 @@ button:active{
     box-shadow:0 2px 4px rgba(0,0,0,.1);
 }
 
+#overallRanking{
+    background:white;
+    padding:16px;
+    border-radius:10px;
+    margin-bottom:15px;
+    box-shadow:0 2px 4px rgba(0,0,0,.1);
+}
+
+.overall-ranking-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid #eee;
+}
+
+.overall-ranking-item:last-child{
+    border-bottom:none;
+}
+
+.overall-ranking-item .rank{
+    font-weight:bold;
+    font-size:18px;
+    color:#1976d2;
+    width:50px;
+}
+
+.overall-ranking-item .horse-no{
+    font-weight:bold;
+    font-size:16px;
+    color:#333;
+    width:60px;
+}
+
+.overall-ranking-item .total-score{
+    font-weight:bold;
+    font-size:16px;
+    color:#4caf50;
+    width:80px;
+}
+
+.overall-ranking-item .paddock-check{
+    display:flex;
+    align-items:center;
+    font-size:14px;
+    margin:0 10px;
+}
+
+.overall-ranking-item .paddock-input{
+    width:50px;
+    padding:6px;
+    font-size:14px;
+    border:1px solid #ccc;
+    border-radius:4px;
+    -webkit-appearance:none;
+    appearance:none;
+}
+
 .evaluation-item{
     display:flex;
     align-items:center;

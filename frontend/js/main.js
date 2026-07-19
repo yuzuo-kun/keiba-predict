@@ -66,6 +66,9 @@ function displayResults() {
     // 評価項目を動的に生成
     generateEvaluationItems(distance);
 
+    // 総合順位表示
+    displayOverallRanking(ranking, horseCount);
+
     // 集計設定表示
     displayEvaluationSettings();
 
@@ -121,7 +124,7 @@ function generateEvaluationItems(distance) {
 
 function displayEvaluationSettings() {
     const container = document.getElementById("evaluationSettings");
-    container.innerHTML = evaluationItems.map(item => `
+    container.innerHTML = evaluationItems.filter(item => !item.isPaddock).map(item => `
         <div class="evaluation-item">
             <label>
                 <input type="checkbox" 
@@ -138,6 +141,76 @@ function displayEvaluationSettings() {
                    onchange="updateEvaluationSetting('${item.id}', 'weight', this.value)">
         </div>
     `).join('');
+}
+
+function displayOverallRanking(ranking, horseCount) {
+    const container = document.getElementById("overallRankingList");
+    
+    // 各馬の総合点を計算
+    const horseScores = ranking.map(rh => {
+        let totalScore = 0;
+        evaluationItems.forEach(item => {
+            if (item.checked) {
+                if (item.isPaddock) {
+                    // パドック評価は後で処理
+                } else {
+                    const horseRanking = rh.rankings.find(r => r.race_place === item.place && r.distance === item.distance);
+                    if (horseRanking) {
+                        const rankField = `${item.field}_rank`;
+                        const rank = horseRanking[rankField];
+                        if (rank !== null && rank !== undefined) {
+                            const score = horseCount - rank;
+                            totalScore += score * item.weight;
+                        }
+                    }
+                }
+            }
+        });
+        
+        // パドック評価を追加
+        const paddockItem = evaluationItems.find(e => e.isPaddock);
+        if (paddockItem && paddockItem.checked) {
+            const paddockValue = currentData.paddockEvaluations && currentData.paddockEvaluations[rh.horse_no] 
+                ? currentData.paddockEvaluations[rh.horse_no] 
+                : 0;
+            totalScore += paddockValue * paddockItem.weight;
+        }
+        
+        return { horse_no: rh.horse_no, totalScore };
+    });
+
+    // 総合順位でソート
+    horseScores.sort((a, b) => b.totalScore - a.totalScore);
+
+    // 表示
+    container.innerHTML = horseScores.map((hs, index) => {
+        const paddockValue = currentData.paddockEvaluations && currentData.paddockEvaluations[hs.horse_no] 
+            ? currentData.paddockEvaluations[hs.horse_no] 
+            : 0;
+        const paddockItem = evaluationItems.find(e => e.isPaddock);
+        
+        return `
+            <div class="overall-ranking-item">
+                <span class="rank">${index + 1}位</span>
+                <span class="horse-no">${hs.horse_no}番</span>
+                <span class="total-score">${hs.totalScore.toFixed(1)}点</span>
+                <label class="paddock-check">
+                    <input type="checkbox" 
+                           id="paddock_check_${hs.horse_no}" 
+                           ${paddockItem && paddockItem.checked ? 'checked' : ''}
+                           onchange="updatePaddockCheck(${hs.horse_no}, this.checked)">
+                    パドック
+                </label>
+                <input type="number" 
+                       id="paddock_${hs.horse_no}" 
+                       value="${paddockValue}" 
+                       min="0" 
+                       max="10"
+                       class="paddock-input"
+                       onchange="updatePaddockEvaluation(${hs.horse_no}, this.value)">
+            </div>
+        `;
+    }).join('');
 }
 
 function displayHorseResults(ranking, horseCount) {
@@ -157,7 +230,7 @@ function displayHorseResults(ranking, horseCount) {
                         const rankField = `${item.field}_rank`;
                         const rank = horseRanking[rankField];
                         if (rank !== null && rank !== undefined) {
-                            const score = horseCount - (rank - 1);
+                            const score = horseCount - rank;
                             totalScore += score * item.weight;
                         }
                     }
@@ -196,13 +269,7 @@ function displayHorseResults(ranking, horseCount) {
                 return `
                     <div class="evaluation-detail">
                         <span>${item.name}:</span>
-                        <input type="number" 
-                               id="paddock_${rh.horse_no}" 
-                               value="${paddockValue}" 
-                               min="0" 
-                               max="10"
-                               onchange="updatePaddockEvaluation(${rh.horse_no}, this.value)">
-                        <span>点数: ${paddockValue * item.weight}</span>
+                        <span>${paddockValue}</span>
                     </div>
                 `;
             }
@@ -212,7 +279,7 @@ function displayHorseResults(ranking, horseCount) {
             if (horseRanking) {
                 const rankField = `${item.field}_rank`;
                 const rank = horseRanking[rankField];
-                const score = rank !== null && rank !== undefined ? horseCount - (rank - 1) : 0;
+                const score = rank !== null && rank !== undefined ? horseCount - rank : 0;
                 
                 return `
                     <div class="evaluation-detail">
@@ -254,6 +321,14 @@ function updatePaddockEvaluation(horseNo, value) {
     currentData.paddockEvaluations[horseNo] = parseFloat(value);
 }
 
+function updatePaddockCheck(horseNo, checked) {
+    // パドック評価のチェック状態を更新
+    const paddockItem = evaluationItems.find(e => e.isPaddock);
+    if (paddockItem) {
+        paddockItem.checked = checked;
+    }
+}
+
 function recalculate() {
     const horseCount = currentData.info.horses.length;
     const ranking = currentData.ranking;
@@ -276,7 +351,7 @@ function recalculate() {
                         const rankField = `${item.field}_rank`;
                         const rank = horseRanking[rankField];
                         if (rank !== null && rank !== undefined) {
-                            const score = horseCount - (rank - 1);
+                            const score = horseCount - rank;
                             totalScore += score * item.weight;
                         }
                     }
@@ -291,5 +366,6 @@ function recalculate() {
     horseScores.sort((a, b) => b.totalScore - a.totalScore);
     
     // 再表示
+    displayOverallRanking(ranking, horseCount);
     displayHorseResults(ranking, horseCount);
 }
